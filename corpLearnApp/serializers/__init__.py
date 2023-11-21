@@ -1,0 +1,13 @@
+
+from .user import UserSerializer
+from .role import RoleSerializer
+from .course import CourseSerializer
+from .employee_course import EmployeeCourseSerializer
+from .employee_concern import EmployeeConcernSerializer
+from .training_document import TrainingDocumentSerializer
+from .module import ModuleSerializer
+from .discussion_forum import DiscussionForumSerializer
+from .discussion_forum_question import DiscussionForumQuestionSerializer
+from .discussion_forum_answer import DiscussionForumAnswerSerializer
+from .announcement import AnnouncementSerializer
+from .upload_document import UploadDocumentSerializer

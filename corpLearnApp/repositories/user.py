@@ -1,4 +1,4 @@
-
+from django.db import IntegrityError, transaction
 class UserRepository:
     def __init__(self, user_model):
         self.user_model = user_model
@@ -23,3 +23,14 @@ class UserRepository:
 
     def get_all_user(self):
         return self.user_model.objects.all()
+
+    def get_or_create_default_user(self, **data):
+        default_users = {}
+        user = {'name': 'Admin', 'email': 'admin@umd.edu', 'role_id': 1, 'password': data['password']}
+        with transaction.atomic():
+            user_email = user['email']
+            email, created = self.user_model.objects.get_or_create(email = user_email, defaults=data)
+            default_users[email] = email
+
+
+        return default_users

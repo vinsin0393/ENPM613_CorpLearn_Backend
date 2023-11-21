@@ -258,6 +258,12 @@ class UserService:
     def get_all_users():
         repo = UserRepository(User)
         return repo.get_all_user()
-
+    @staticmethod
+    @exception_log_handler
+    def add_test_admin_user():
+        user_repo = UserRepository(User)
+        default_password = 'test@1'
+        hashed_password = make_password(default_password)
+        user_repo.get_or_create_default_user(password=hashed_password)
 
 

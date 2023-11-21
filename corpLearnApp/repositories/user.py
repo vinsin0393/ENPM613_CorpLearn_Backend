@@ -1,4 +1,8 @@
 from django.db import IntegrityError, transaction
+
+from corpLearnApp.models import Role
+
+
 class UserRepository:
     def __init__(self, user_model):
         self.user_model = user_model
@@ -26,11 +30,20 @@ class UserRepository:
 
     def get_or_create_default_user(self, **data):
         default_users = {}
-        user = {'name': 'Admin', 'email': 'admin@umd.edu', 'role_id': 1, 'password': data['password']}
+        admin_role = Role.objects.get(id=1)
+        user_password = data.get('password')
+
         with transaction.atomic():
-            user_email = user['email']
-            email, created = self.user_model.objects.get_or_create(email = user_email, defaults=data)
-            default_users[email] = email
-
-
+            user_email = 'admin@umd.edu'
+            user, created = self.user_model.objects.get_or_create(
+                email=user_email,
+                defaults={
+                    'name': 'Admin',
+                    'role': admin_role
+                }
+            )
+            if user_password:
+                user.set_password(user_password)
+                user.save()
+            default_users[user.email] = user
         return default_users

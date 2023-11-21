@@ -1,0 +1,10 @@
+[run]
+source =
+    corpLearnApp/services
+
+[report]
+omit =
+    */tests.py
+    */migrations/*
+    */admin.py
+    */apps.py

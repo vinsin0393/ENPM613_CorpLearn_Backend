@@ -94,15 +94,18 @@ def delete_module(request, id):
     return Response(data)
 
 
-@swagger_auto_schema( method='post', request_body=UploadDocumentSerializer, responses={201: ModuleSerializer})
+@swagger_auto_schema( method='post', request_body=UploadDocumentSerializer, responses={201: UploadDocumentSerializer})
 @api_view(['POST'])
 @exception_log_handler
 @admin_only
 def upload_document(request):
+    print("hello")
     file = request.FILES['file']
     course_id = request.data['course_id']
     content = request.data['content']
+
     training_document = DocumentService.save_training_document(file, f"{file.name}")
+
     training_document = TrainingDocumentRepository(TrainingDocument).get_training_document(id=training_document.data['id'])
     course = CourseRepository(Course).get_course(code=course_id)
     module = {

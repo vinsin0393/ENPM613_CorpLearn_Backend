@@ -1,37 +1,38 @@
 @echo off
 
-REM Define the virtual environment directory
+REM Define the directory for the virtual environment
 set VENV_DIR=myenv
 
 REM Check if the virtual environment directory exists, if not, create one
 if not exist "%VENV_DIR%" (
     python -m venv %VENV_DIR%
     echo Virtual environment created.
-) else (
-    echo Virtual environment already exists.
 )
 
 REM Activate the virtual environment
-call %VENV_DIR%\Scripts\activate
+call %VENV_DIR%\Scripts\activate.bat
 
-REM Check if requirements.txt exists
-if exist "requirements.txt" (
-    REM Install dependencies from requirements.txt
-    pip install -r requirements.txt
-) else (
-    echo requirements.txt not found. Please ensure the file exists in the current directory.
-    exit /b
-)
+REM Install dependencies from requirements.txt
+pip install -r requirements.txt
 
 REM Apply migrations
-python manage.py makemigrations
 python manage.py migrate
 
-REM Run the Django development server
-python manage.py runserver
+REM Running the tests with coverage
+echo Running tests with coverage...
+coverage erase
+coverage run --source=corpLearnApp/services/ manage.py test corpLearnApp.test_cases.course-tests corpLearnApp.test_cases.user-tests corpLearnApp.test_cases.document-tests --verbosity=2
+set TEST_STATUS=%ERRORLEVEL%
 
-REM Deactivate virtual environment on exit
-call %VENV_DIR%\Scripts\deactivate
+REM Generating coverage report
+coverage report
+coverage html
 
-echo Script execution completed. Press any key to exit.
-pause > nul
+REM Check if tests were successful
+if %TEST_STATUS% == 0 (
+    echo Tests passed successfully. Starting server...
+    python manage.py runserver
+) else (
+    echo Tests failed. Please fix the issues before starting the server.
+    exit /b 1
+)

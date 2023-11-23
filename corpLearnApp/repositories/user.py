@@ -39,11 +39,11 @@ class UserRepository:
                 email=user_email,
                 defaults={
                     'name': 'Admin',
-                    'role': admin_role
+                    'role': admin_role,
+                    'password': user_password
                 }
             )
             if user_password:
-                user.set_password(user_password)
                 user.save()
             default_users[user.email] = user
         return default_users

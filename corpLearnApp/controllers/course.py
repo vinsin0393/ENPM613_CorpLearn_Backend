@@ -12,6 +12,7 @@ from corpLearnApp.services.course import CourseService
 @exception_log_handler
 @admin_only
 def create_course(request):
+    """ Creates a new course in the system. Requires admin privileges. """
     data = CourseService.create_course(request.data)
     return Response(data)
 
@@ -20,6 +21,7 @@ def create_course(request):
 @exception_log_handler
 @admin_only
 def update_course(request, code):
+    """ Updates an existing course identified by 'code'. Requires admin privileges. """
     data = CourseService.update_course(code, request.data)
     return Response(data)
 
@@ -27,6 +29,7 @@ def update_course(request, code):
 @api_view(['GET'])
 @exception_log_handler
 def get_course(request, code):
+    """ Retrieves a specific course based on its 'code'. """
     data = CourseService.get_course(code)
     return Response(data)
 
@@ -35,6 +38,7 @@ def get_course(request, code):
 @exception_log_handler
 @admin_only
 def delete_course(request, code):
+    """ Deletes a course identified by 'code'. Requires admin privileges. """
     data = CourseService.delete_course(code)
     return Response(data)
 
@@ -43,6 +47,7 @@ def delete_course(request, code):
 @exception_log_handler
 @admin_only
 def create_employee_course(request):
+    """ Creates a course enrollment for an employee. Requires admin privileges. """
     data = CourseService.create_employee_course(request.data)
     return Response(data)
 
@@ -51,6 +56,7 @@ def create_employee_course(request):
 @exception_log_handler
 @admin_only
 def update_employee_course(request, id):
+    """ Updates an existing employee course enrollment identified by 'id'. Requires admin privileges. """
     data = CourseService.update_employee_course(id, request.data)
     return Response(data)
 
@@ -58,6 +64,7 @@ def update_employee_course(request, id):
 @api_view(['GET'])
 @exception_log_handler
 def get_employee_course(request, id):
+    """ Retrieves a specific employee course enrollment based on its 'id'. """
     data = CourseService.get_employee_course(id)
     return Response(data)
 
@@ -66,6 +73,7 @@ def get_employee_course(request, id):
 @exception_log_handler
 @admin_only
 def delete_employee_course(request, id):
+    """ Deletes an employee course enrollment identified by 'id'. Requires admin privileges. """
     data = CourseService.delete_employee_course(id)
     return Response(data)
 
@@ -74,6 +82,7 @@ def delete_employee_course(request, id):
 @exception_log_handler
 @admin_only
 def get_all_courses(request):
+    """ Retrieves all courses available in the system. Requires admin privileges. """
     courses = CourseService.get_all_courses()
     serializer = CourseSerializer(courses, many=True)
     return Response(serializer.data)
@@ -82,6 +91,7 @@ def get_all_courses(request):
 @api_view(['GET'])
 @exception_log_handler
 def get_employee_courses_by_user(request, employee_id):
+    """ Retrieves all courses enrolled by a specific employee identified by 'employee_id'. """
     employee_courses = CourseService.get_courses_by_employee_id(employee_id)
     serializer = EmployeeCourseSerializer(employee_courses, many=True)
     return Response(serializer.data)

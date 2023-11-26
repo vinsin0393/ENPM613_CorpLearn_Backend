@@ -31,6 +31,7 @@ from corpLearnApp.services import UserService
 @api_view(['POST'])
 @exception_log_handler
 def login(request):
+    """ Authenticates a user and provides JWT tokens upon successful login. """
     email = request.data.get('email')
     password = request.data.get('password')
     user = authenticate(email=email, password=password)
@@ -57,6 +58,7 @@ def login(request):
 @api_view(["POST"])
 @exception_log_handler
 def create_user(request):
+    """ Handles the creation of a new user in the system. """
     user_data = UserService.add_user(request.data)
     return Response(user_data, status=status.HTTP_201_CREATED)
 
@@ -65,6 +67,7 @@ def create_user(request):
 @api_view(["GET"])
 @exception_log_handler
 def get_user(request, user_id):
+    """ Retrieves specific user details based on the provided user ID. """
     try:
         if not request.user.role.allow_edit() and not request.user.id == int(user_id):
             logger.error(f'User {request.user.id} does not have permission to access user {user_id}')
@@ -80,6 +83,7 @@ def get_user(request, user_id):
 @api_view(["PUT"])
 @exception_log_handler
 def update_user(request, user_id):
+    """ Updates user information for the specified user ID. """
     try:
         user_data = UserService.update_user(user_id, request.data)
         return Response(user_data, status=status.HTTP_200_OK)
@@ -91,6 +95,7 @@ def update_user(request, user_id):
 @api_view(["DELETE"])
 @exception_log_handler
 def delete_user(request, user_id):
+    """ Removes a user from the system based on the provided user ID. """
     UserService.delete_user(user_id)
     return Response({'message': 'User deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
@@ -99,6 +104,7 @@ def delete_user(request, user_id):
 @api_view(['POST'])
 @exception_log_handler
 def add_role(request):
+    """ Adds a new role to the system. """
     role_data = UserService.add_default_role()
     serializer = RoleSerializer(role_data)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -108,6 +114,7 @@ def add_role(request):
 @api_view(['POST'])
 @exception_log_handler
 def create_announcement(request):
+    """ Manages the creation of a new announcement. """
     data = UserService.create_announcement(request.data)
     return Response(data)
 
@@ -115,6 +122,7 @@ def create_announcement(request):
 @api_view(['PUT'])
 @exception_log_handler
 def update_announcement(request, id):
+    """ Updates an existing announcement based on its ID. """
     data = UserService.update_announcement(id, request.data)
     return Response(data)
 
@@ -122,6 +130,7 @@ def update_announcement(request, id):
 @api_view(['GET'])
 @exception_log_handler
 def get_announcement(request, id):
+    """ Retrieves a specific announcement based on its ID. """
     data = UserService.get_announcement(id)
     return Response(data)
 
@@ -129,6 +138,7 @@ def get_announcement(request, id):
 @api_view(['DELETE'])
 @exception_log_handler
 def delete_announcement(request, id):
+    """ Deletes an announcement based on its ID. """
     data = UserService.delete_announcement(id)
     return Response(data)
 
@@ -136,6 +146,7 @@ def delete_announcement(request, id):
 @api_view(['POST'])
 @exception_log_handler
 def create_discussion_forum(request):
+    """ Handles the creation of a new discussion forum. """
     data = UserService.create_discussion_forum(request.data)
     return Response(data)
 
@@ -143,6 +154,7 @@ def create_discussion_forum(request):
 @api_view(['PUT'])
 @exception_log_handler
 def update_discussion_forum(request, id):
+    """  Updates an existing discussion forum based on its ID"""
     data = UserService.update_discussion_forum(id, request.data)
     return Response(data)
 
@@ -150,6 +162,7 @@ def update_discussion_forum(request, id):
 @api_view(['GET'])
 @exception_log_handler
 def get_discussion_forum(request, id):
+    """   Fetches a specific discussion forum question based on its  """
     data = UserService.get_discussion_forum(id)
     return Response(data)
 
@@ -157,6 +170,7 @@ def get_discussion_forum(request, id):
 @api_view(['DELETE'])
 @exception_log_handler
 def delete_discussion_forum(request, id):
+    """ Removes a discussion forum based on its ID."""
     data = UserService.delete_discussion_forum(id)
     return Response(data)
 
@@ -165,6 +179,7 @@ def delete_discussion_forum(request, id):
 @api_view(['POST'])
 @exception_log_handler
 def create_employee_concern(request):
+    """ Manages the creation of an employee concern"""
     data = UserService.create_employee_concern(request.data)
     return Response(data)
 
@@ -172,6 +187,7 @@ def create_employee_concern(request):
 @api_view(['PUT'])
 @exception_log_handler
 def update_employee_concern(request, id):
+    """Updates an existing employee concern based on its ID"""
     data = UserService.update_employee_concern(id, request.data)
     return Response(data)
 
@@ -179,6 +195,7 @@ def update_employee_concern(request, id):
 @api_view(['GET'])
 @exception_log_handler
 def get_employee_concern(request, id):
+    """Retrieves a specific employee concern based on its ID"""
     data = UserService.get_employee_concern(id)
     return Response(data)
 
@@ -186,6 +203,7 @@ def get_employee_concern(request, id):
 @api_view(['DELETE'])
 @exception_log_handler
 def delete_employee_concern(request, id):
+    """ Deletes an employee concern based on its ID"""
     data = UserService.delete_employee_concern(id)
     return Response(data)
 
@@ -194,6 +212,7 @@ def delete_employee_concern(request, id):
 @api_view(['POST'])
 @exception_log_handler
 def create_discussion_forum_question(request):
+    """  Handles the creation of a new discussion forum question"""
     data = UserService.create_discussion_forum_question(request.data)
     return Response(data)
 
@@ -201,6 +220,7 @@ def create_discussion_forum_question(request):
 @api_view(['PUT'])
 @exception_log_handler
 def update_discussion_forum_question(request, id):
+    """  Updates a discussion forum question based on its ID"""
     data = UserService.update_discussion_forum_question(id, request.data)
     return Response(data)
 
@@ -209,6 +229,7 @@ def update_discussion_forum_question(request, id):
 @api_view(['GET'])
 @exception_log_handler
 def get_discussion_forum_question(request, id):
+    """ Fetches a specific discussion forum question based on its ID"""
     data = UserService.get_discussion_forum_question(id)
     return Response(data)
 
@@ -217,6 +238,7 @@ def get_discussion_forum_question(request, id):
 @api_view(['DELETE'])
 @exception_log_handler
 def delete_discussion_forum_question(request, id):
+    """ Deletes a discussion forum question based on its ID"""
     data = UserService.delete_discussion_forum_question(id)
     return Response(data)
 
@@ -225,6 +247,7 @@ def delete_discussion_forum_question(request, id):
 @api_view(['POST'])
 @exception_log_handler
 def create_discussion_forum_answer(request):
+    """ Manages the creation of a discussion forum answer"""
     data = UserService.create_discussion_forum_answer(request.data)
     return Response(data)
 
@@ -233,6 +256,7 @@ def create_discussion_forum_answer(request):
 @api_view(['PUT'])
 @exception_log_handler
 def update_discussion_forum_answer(request, id):
+    """ Updates a discussion forum answer based on its ID"""
     data = UserService.update_discussion_forum_answer(id, request.data)
     return Response(data)
 
@@ -241,6 +265,7 @@ def update_discussion_forum_answer(request, id):
 @api_view(['GET'])
 @exception_log_handler
 def get_discussion_forum_answer(request, id):
+    """ Retrieves a specific discussion forum answer based on its ID."""
     data = UserService.get_discussion_forum_answer(id)
     return Response(data)
 
@@ -249,6 +274,7 @@ def get_discussion_forum_answer(request, id):
 @api_view(['DELETE'])
 @exception_log_handler
 def delete_discussion_forum_answer(request, id):
+    """Removes a discussion forum answer based on its ID"""
     data = UserService.delete_discussion_forum_answer(id)
     return Response(data)
 
@@ -257,6 +283,7 @@ def delete_discussion_forum_answer(request, id):
 @api_view(['GET'])
 @exception_log_handler
 def get_all_announcements(request):
+    """Fetches all announcements available in the system"""
     announcements = UserService.get_all_announcements()
     serializer = AnnouncementSerializer(announcements, many=True)
     return Response(serializer.data)
@@ -266,6 +293,7 @@ def get_all_announcements(request):
 @admin_only
 @exception_log_handler
 def get_all_discussion_forums(request):
+    """Fetches all announcements available in the system"""
     forums = UserService.get_all_discussion_forums()
     serializer = DiscussionForumSerializer(forums, many=True)
     return Response(serializer.data)
@@ -274,6 +302,7 @@ def get_all_discussion_forums(request):
 @api_view(['GET'])
 @exception_log_handler
 def get_discussion_forum_answers(request, question_id):
+    """Retrieves all discussion forums available"""
     answers = UserService.get_answers_by_question_id(question_id)
     serializer = DiscussionForumAnswerSerializer(answers, many=True)
     return Response(serializer.data)
@@ -284,6 +313,7 @@ def get_discussion_forum_answers(request, question_id):
 @admin_only
 @exception_log_handler
 def get_all_employee_concerns(request):
+    """Fetches all answers for a specific discussion forum question"""
     concerns = UserService.get_all_employee_concerns()
     serializer = EmployeeConcernSerializer(concerns, many=True)
     return Response(serializer.data)
@@ -291,6 +321,7 @@ def get_all_employee_concerns(request):
 @swagger_auto_schema(method='get', responses={200: EmployeeConcernSerializer(many=True)})
 @api_view(['GET'])
 def get_employee_concerns_by_user(request, user_id):
+    """ Fetches employee concerns associated with a specific user"""
     concerns = UserService.get_employee_concerns_by_user_id(user_id)
     serializer = EmployeeConcernSerializer(concerns, many=True)
     return Response(serializer.data)
@@ -298,6 +329,7 @@ def get_employee_concerns_by_user(request, user_id):
 @swagger_auto_schema(method='get', responses={200: UserSerializer(many=True)})
 @api_view(['GET'])
 def get_all_users(request):
+    """Retrieves all users registered in the system"""
     users = UserService.get_all_users()
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)

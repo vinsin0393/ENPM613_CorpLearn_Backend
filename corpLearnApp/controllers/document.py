@@ -20,6 +20,7 @@ from corpLearnApp.controllers.controller_excpetion_log_handler.exception_log_han
 @exception_log_handler
 @admin_only
 def create_training_document(request):
+    """ Creates a new training document in the system. Requires admin privileges. """
     data = DocumentService.create_document(request.data)
     return Response(data, status=status.HTTP_201_CREATED)
 
@@ -28,6 +29,7 @@ def create_training_document(request):
 @exception_log_handler
 @admin_only
 def update_training_document(request, id):
+    """ Updates an existing training document identified by 'id'. Requires admin privileges. """
     data = DocumentService.update_document(id, request.data)
     return Response(data, status=status.HTTP_200_OK)
 
@@ -35,6 +37,7 @@ def update_training_document(request, id):
 @api_view(['GET'])
 @exception_log_handler
 def get_training_document(request, id):
+    """ Retrieves a specific training document based on its 'id'. """
     data = DocumentService.get_document(id)
     return Response(data, status=status.HTTP_200_OK)
 
@@ -43,6 +46,7 @@ def get_training_document(request, id):
 @exception_log_handler
 @admin_only
 def delete_training_document(request, id):
+    """ Deletes a training document identified by 'id'. Requires admin privileges. """
     DocumentService.delete_document(id)
     return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -50,6 +54,7 @@ def delete_training_document(request, id):
 @swagger_auto_schema(method='get', responses={200: ModuleSerializer(many=True)})
 @api_view(['GET'])
 def get_modules_by_course(request, course_id):
+    """ Retrieves all modules associated with a specific course identified by 'course_id'. """
     modules = DocumentService.get_modules_by_course_id(course_id)
     serializer = ModuleSerializer(modules, many=True)
     return Response(serializer.data)
@@ -57,6 +62,7 @@ def get_modules_by_course(request, course_id):
 @swagger_auto_schema(method='get', responses={200: ModuleSerializer(many=True)})
 @api_view(['GET'])
 def get_modules_by_document(request, document_id):
+    """ Retrieves all modules associated with a specific document identified by 'document_id'. """
     modules = DocumentService.get_modules_by_document_id(document_id)
     serializer = ModuleSerializer(modules, many=True)
     return Response(serializer.data)
@@ -66,6 +72,7 @@ def get_modules_by_document(request, document_id):
 @exception_log_handler
 @admin_only
 def create_module(request):
+    """ Creates a new module in the system. Requires admin privileges. """
     data = DocumentService.create_module(request.data)
     return Response(data)
 
@@ -74,6 +81,7 @@ def create_module(request):
 @admin_only
 @exception_log_handler
 def update_module(request, id):
+    """ Updates an existing module identified by 'id'. Requires admin privileges. """
     data = DocumentService.update_module(id, request.data)
     return Response(data)
 
@@ -82,6 +90,7 @@ def update_module(request, id):
 @admin_only
 @exception_log_handler
 def get_module(request, id):
+    """ Retrieves a specific module based on its 'id'. Requires admin privileges. """
     data = DocumentService.get_module(id)
     return Response(data)
 
@@ -90,22 +99,20 @@ def get_module(request, id):
 @exception_log_handler
 @admin_only
 def delete_module(request, id):
+    """ Deletes a module identified by 'id'. Requires admin privileges. """
     data = DocumentService.delete_module(id)
     return Response(data)
-
 
 @swagger_auto_schema( method='post', request_body=UploadDocumentSerializer, responses={201: UploadDocumentSerializer})
 @api_view(['POST'])
 @exception_log_handler
 @admin_only
 def upload_document(request):
-    print("hello")
+    """ Handles the uploading of a document and associating it with a course and module. Requires admin privileges. """
     file = request.FILES['file']
     course_id = request.data['course_id']
     content = request.data['content']
-
     training_document = DocumentService.save_training_document(file, f"{file.name}")
-
     training_document = TrainingDocumentRepository(TrainingDocument).get_training_document(id=training_document.data['id'])
     course = CourseRepository(Course).get_course(code=course_id)
     module = {
@@ -124,6 +131,7 @@ def upload_document(request):
 @api_view(['GET'])
 @exception_log_handler
 def download_training_document(request, module_id):
+    """ Allows downloading of a training document associated with a module identified by 'module_id'. """
     file_content, file_name = DocumentService.get_saved_training_document(module_id)
     response = HttpResponse(file_content, content_type='application/octet-stream')
     response['Content-Disposition'] = f'attachment; filename="{file_name}"'

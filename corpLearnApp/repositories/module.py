@@ -4,6 +4,8 @@ class ModuleRepository:
         self.model = model
 
     def create_module(self, **kwargs):
+        kwargs['course_id'] = kwargs['course']
+        del kwargs['course']
         return self.model.objects.create(**kwargs)
 
     def update_module(self, id, **kwargs):

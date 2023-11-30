@@ -14,7 +14,7 @@ class DiscussionForumRepository:
         return discussionForum
 
     def get_discussion_forum(self, id):
-        return self.model.objects.get(id=id)
+        return self.model.objects.get(course_id=id)
 
     def delete_discussion_forum(self, id):
         return self.model.objects.get(id=id).delete()

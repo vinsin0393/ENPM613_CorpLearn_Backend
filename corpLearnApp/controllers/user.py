@@ -69,9 +69,9 @@ def create_user(request):
 def get_user(request, user_id):
     """ Retrieves specific user details based on the provided user ID. """
     try:
-        if not request.user.role.allow_edit() and not request.user.id == int(user_id):
-            logger.error(f'User {request.user.id} does not have permission to access user {user_id}')
-            return Response({'error': 'You do not have permission for this action'}, status=status.HTTP_403_FORBIDDEN)
+        # if not request.user.role.allow_edit() and not request.user.id == int(user_id):
+        #     logger.error(f'User {request.user.id} does not have permission to access user {user_id}')
+        #     return Response({'error': 'You do not have permission for this action'}, status=status.HTTP_403_FORBIDDEN)
 
         user_data = UserService.get_user(user_id)
         return Response(user_data, status=status.HTTP_200_OK)
@@ -161,9 +161,9 @@ def update_discussion_forum(request, id):
 @swagger_auto_schema(method='get', responses={200: DiscussionForumSerializer})
 @api_view(['GET'])
 @exception_log_handler
-def get_discussion_forum(request, id):
+def get_discussion_forum(request, course_id):
     """   Fetches a specific discussion forum question based on its  """
-    data = UserService.get_discussion_forum(id)
+    data = UserService.get_discussion_forum(course_id)
     return Response(data)
 
 @swagger_auto_schema(method='delete', responses={204: 'User deleted successfully', 404: 'User not found'})
@@ -290,7 +290,6 @@ def get_all_announcements(request):
 
 @swagger_auto_schema(method='get', responses={200: DiscussionForumSerializer(many=True)})
 @api_view(['GET'])
-@admin_only
 @exception_log_handler
 def get_all_discussion_forums(request):
     """Fetches all announcements available in the system"""
@@ -310,7 +309,6 @@ def get_discussion_forum_answers(request, question_id):
 
 @swagger_auto_schema(method='get', responses={200: EmployeeConcernSerializer(many=True)})
 @api_view(['GET'])
-@admin_only
 @exception_log_handler
 def get_all_employee_concerns(request):
     """Fetches all answers for a specific discussion forum question"""

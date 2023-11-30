@@ -1,4 +1,5 @@
 
+import json
 class EmployeeCourseRepository:
     def __init__(self, model):
         self.model = model
@@ -8,6 +9,15 @@ class EmployeeCourseRepository:
 
     def update_employee_course(self, id, **kwargs):
         employeeCourse = self.model.objects.get(id=id)
+        if not "data" in kwargs:
+            data = {}
+            if employeeCourse.data != '': 
+                data = json.loads(employeeCourse.data)
+            if "status" in kwargs and kwargs["status"] == "InProgress": data["current_module"] = 0
+        if "data" in kwargs:
+            data = kwargs["data"]
+
+        kwargs["data"] = json.dumps(data)
         for key, value in kwargs.items():
             setattr(employeeCourse, key, value)
         employeeCourse.save()

@@ -54,7 +54,6 @@ def create_employee_course(request):
 @swagger_auto_schema(method='put', request_body=EmployeeCourseSerializer, responses={200: EmployeeCourseSerializer})
 @api_view(['PUT'])
 @exception_log_handler
-@admin_only
 def update_employee_course(request, id):
     """ Updates an existing employee course enrollment identified by 'id'. Requires admin privileges. """
     data = CourseService.update_employee_course(id, request.data)
@@ -80,7 +79,6 @@ def delete_employee_course(request, id):
 @swagger_auto_schema(method='get', responses={200: CourseSerializer(many=True)})
 @api_view(['GET'])
 @exception_log_handler
-@admin_only
 def get_all_courses(request):
     """ Retrieves all courses available in the system. Requires admin privileges. """
     courses = CourseService.get_all_courses()

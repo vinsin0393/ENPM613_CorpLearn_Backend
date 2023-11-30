@@ -10,7 +10,7 @@ if not exist "%VENV_DIR%" (
 )
 
 REM Activate the virtual environment
-call %VENV_DIR%\Scripts\activate.bat
+call %VENV_DIR%\Scripts\activate
 
 REM Install dependencies from requirements.txt
 pip install -r requirements.txt

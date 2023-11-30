@@ -52,7 +52,7 @@ urlpatterns = [
 # URL patterns for Discussion forums
     path('users/discussion-forums/create', create_discussion_forum, name='create_discussion_forum'),
     path('users/discussion-forums/update/<int:id>', update_discussion_forum, name='update_discussion_forum'),
-    path('users/discussion-forums/<int:id>', get_discussion_forum, name='get_discussion_forum'),
+    path('users/discussion-forums/<str:course_id>', get_discussion_forum, name='get_discussion_forum'),
     path('users/discussion-forums/delete/<int:id>', delete_discussion_forum, name='delete_discussion_forum'),
     path('users/discussion-forums/all', get_all_discussion_forums, name='get_all_discussion_forums'),
 
@@ -74,7 +74,7 @@ urlpatterns = [
     path('courses/update/<str:code>', update_course, name='update_course'),
     path('courses/<str:code>', get_course, name='get_course'),
     path('courses/delete/<str:code>', delete_course, name='delete_course'),
-    path('courses/all', get_all_courses, name='get_all_courses'),
+    path('courses', get_all_courses, name='get_all_courses'),
 
 # URL patterns for EmployeeCourse
     path('courses/employee-courses/create', create_employee_course, name='create_employee_course'),
@@ -90,7 +90,7 @@ urlpatterns = [
     path('documents/training-documents/delete/<int:id>', delete_training_document, name='delete_training_document'),
 
 # URL patterns for training modules
-    path('documents/modules/<int:course_id>/modules', get_modules_by_course, name='get_modules_by_course'),
+    path('documents/modules/<str:course_id>/modules', get_modules_by_course, name='get_modules_by_course'),
     path('documents/modules/<int:document_id>/modules', get_modules_by_document, name='get_modules_by_document'),
     path('documents/modules/create', create_module, name='create_module'),
     path('documents/modules/update/<int:id>', update_module, name='update_module'),

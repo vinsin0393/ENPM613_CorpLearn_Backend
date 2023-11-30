@@ -2,7 +2,7 @@ from django.utils.deprecation import MiddlewareMixin
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import AuthenticationFailed, InvalidToken
 
-UNAUTHENTICATED_PATHS = ['/corpLearn/login', '/swagger/']  # Paths to bypass authentication
+UNAUTHENTICATED_PATHS = ['/corpLearn/users/create', '/corpLearn/login', '/swagger/']  # Paths to bypass authentication
 
 
 class JWTAuthenticationMiddleware(MiddlewareMixin):

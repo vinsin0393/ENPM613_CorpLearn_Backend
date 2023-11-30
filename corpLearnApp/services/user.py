@@ -1,5 +1,5 @@
 from django.contrib.auth.hashers import make_password
-from corpLearnApp.models import User, Role, Announcement, EmployeeConcern, DiscussionForum, DiscussionForumQuestion, DiscussionForumAnswer
+from corpLearnApp.models import User, Role, Announcement, EmployeeConcern, DiscussionForum, DiscussionForumQuestion, DiscussionForumAnswer, Course
 from corpLearnApp.repositories import UserRepository, RoleRepository, EmployeeConcernRepository, AnnounceRepository, DiscussionForumRepository, DiscussionForumQuestionRepository, DiscussionForumAnswerRepository
 from corpLearnApp.serializers import UserSerializer, AnnouncementSerializer, EmployeeConcernSerializer, DiscussionForumSerializer, DiscussionForumQuestionSerializer, DiscussionForumAnswerSerializer
 from corpLearnApp.services.service_exception_log_handler.exception_log_handler import exception_log_handler
@@ -139,8 +139,14 @@ class UserService:
     def create_discussion_forum(data):
         """ Creates a new discussion forum. """
         repository = DiscussionForumRepository(DiscussionForum)
-        forum = repository.create_discussion_forum(**data)
-        return DiscussionForumSerializer(forum).data
+        data["course"] = Course.objects.get(code=data['course'])
+        try:
+            repository.get_discussion_forum(data["course"])
+            forum = repository.get_discussion_forum(data["course"])
+            return DiscussionForumSerializer(forum).data
+        except Exception as e:
+            forum = repository.create_discussion_forum(**data)
+            return DiscussionForumSerializer(forum).data
 
     @staticmethod
     @exception_log_handler
@@ -196,8 +202,8 @@ class UserService:
     def get_discussion_forum_question(id):
         """ Get an existing discussion forum question identified by 'id'. """
         repository = DiscussionForumQuestionRepository(DiscussionForumQuestion)
-        question = repository.get_discussion_forum_question(id)
-        return DiscussionForumQuestionSerializer(question).data
+        questions = repository.get_discussion_forum_question(id)
+        return [DiscussionForumQuestionSerializer(question).data for question in questions]
 
     @staticmethod
     @exception_log_handler
@@ -214,7 +220,7 @@ class UserService:
         question = data.pop('question', None)
         user = data.pop('user', None)
         try:
-            question = DiscussionForumQuestionRepository(DiscussionForumQuestion).get_discussion_forum_question(question)
+            question = DiscussionForumQuestionRepository(DiscussionForumQuestion).get_discussion_question(question)
             user = UserRepository(User).get_user(user)
         except DiscussionForumQuestion.DoesNotExist:
             raise ObjectDoesNotExist(f"No Discussion with id {question} exists.")

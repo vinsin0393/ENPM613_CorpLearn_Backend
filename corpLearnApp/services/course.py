@@ -4,6 +4,7 @@ from corpLearnApp.serializers import CourseSerializer, EmployeeCourseSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, timedelta
 from django.core.exceptions import ValidationError
+import json
 
 from corpLearnApp.services.service_exception_log_handler.exception_log_handler import exception_log_handler
 
@@ -28,8 +29,8 @@ class CourseService:
     @exception_log_handler
     def update_course(code, data):
         """ Updates an existing course identified by 'code'. """
-        repository = CourseRepository(Course)
-        course = repository.update_course(code, **data)
+        repository = CourseRepository(Course, code)
+        course = repository.update_course_data(**data)
         return CourseSerializer(course).data
 
     @staticmethod
@@ -63,7 +64,11 @@ class CourseService:
             raise ObjectDoesNotExist(f"No User with id {employee} exists.")
         data['employee'] = employee
         data['course'] = course
+        data["status"] = "Start"
+        data["start_date"] = datetime.now().date()
+        data["end_date"] = datetime.now().date()
         data['deadline'] = datetime.now().date() + timedelta(days=course.time_to_complete)
+        data["data"] = json.dumps(data["data"])
         repository = EmployeeCourseRepository(EmployeeCourse)
         employee_course = repository.create_employee_course(**data)
         return EmployeeCourseSerializer(employee_course).data
@@ -73,6 +78,10 @@ class CourseService:
     def update_employee_course(id, data):
         """ Updates an existing employee course enrollment identified by 'id'. """
         repository = EmployeeCourseRepository(EmployeeCourse)
+        if "status" in data and data["status"] == "InProgress":
+            data["start_date"] = datetime.now().date()
+        if "status" in data and data["status"] == "Completed":
+            data["end_date"] = datetime.now().date()
         employee_course = repository.update_employee_course(id, **data)
         return EmployeeCourseSerializer(employee_course).data
 
@@ -104,4 +113,4 @@ class CourseService:
     def get_courses_by_employee_id(employee_id):
         """ Retrieves all courses enrolled by a specific employee identified by 'employee_id'. """
         repo = EmployeeCourseRepository(EmployeeCourse)
-        return repo.get_employee_course_by_user_id(employee_id).filter(status="InProgress")
+        return repo.get_employee_course_by_user_id(employee_id)
